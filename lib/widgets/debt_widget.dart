@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'transaction_date_divider.dart';
 
 class DebtWidget extends StatelessWidget {
   const DebtWidget({
@@ -7,19 +8,15 @@ class DebtWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dividerSubtextStyle = Theme.of(context).textTheme.bodyText2?.copyWith(
-        fontSize: 12.0, color: Theme.of(context).textTheme.caption?.color);
     return ListView(
       children: [
-        buildDivider(),
-        buildDividerSubText('18.04.2022', dividerSubtextStyle),
+        buildDivider('18.04.2022'),
         const ListTile(
           title: Text('Train Tickets'),
           subtitle: Text('5. Transport'),
           trailing: Text('927.00 DKK'),
         ),
-        buildDivider(),
-        buildDividerSubText('17.04.2022', dividerSubtextStyle),
+        buildDivider('17.04.2022'),
         const ListTile(
           title: Text('Fish'),
           subtitle: Text('1. Food'),
@@ -36,30 +33,6 @@ class DebtWidget extends StatelessWidget {
           trailing: Text('215.00 DKK'),
         ),
       ],
-    );
-  }
-
-  Divider buildDivider() {
-    return const Divider(
-      height: 32.0,
-      indent: 16,
-      thickness: 5.0,
-      color: Colors.blueAccent,
-    );
-  }
-
-  Container buildDividerSubText(
-      String dateText, TextStyle? dividerSubtextStyle) {
-    return Container(
-      padding: const EdgeInsets.only(left: 16),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          dateText,
-          style: dividerSubtextStyle,
-          textAlign: TextAlign.start,
-        ),
-      ),
     );
   }
 }

@@ -1,27 +1,20 @@
+import 'package:family_budget/widgets/nav_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:family_budget/widgets/debt_widget.dart';
+import 'package:family_budget/widgets/income_widget.dart';
 
-import 'accounts_widget.dart';
-import 'budget_widget.dart';
-import 'debt_widget.dart';
-import 'income_widget.dart';
-
-class MainWidget extends StatelessWidget {
-  const MainWidget({Key? key}) : super(key: key);
+class TransactionsWidget extends StatelessWidget {
+  const TransactionsWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Material is a conceptual piece
     // of paper on which the UI appears.
     return DefaultTabController(
-        length: 4,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
-            leading: const IconButton(
-              icon: Icon(Icons.menu),
-              tooltip: 'Navigation menu',
-              onPressed: null,
-            ),
-            title: const Text('List of transactions'),
+            title: const Text('Transactions'),
             actions: const [
               IconButton(
                 icon: Icon(Icons.more_vert),
@@ -34,18 +27,15 @@ class MainWidget extends StatelessWidget {
               tabs: [
                 Tab(text: 'DEBT'),
                 Tab(text: 'INCOME'),
-                Tab(text: 'ACCOUNTS'),
-                Tab(text: 'BUDGET')
               ],
             ),
           ),
+          drawer: const NavigationDrawer(),
           // body is the majority of the screen.
           body: const TabBarView(
             children: [
               DebtWidget(),
               IncomeWidget(),
-              AccountsWidget(),
-              BudgetWidget()
             ],
           ),
           floatingActionButton: const FloatingActionButton(
