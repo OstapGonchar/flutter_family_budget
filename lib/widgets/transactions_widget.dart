@@ -1,3 +1,4 @@
+import 'package:family_budget/widgets/add_transaction_widget.dart';
 import 'package:family_budget/widgets/nav_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:family_budget/widgets/debt_widget.dart';
@@ -38,11 +39,18 @@ class TransactionsWidget extends StatelessWidget {
               IncomeWidget(),
             ],
           ),
-          floatingActionButton: const FloatingActionButton(
+          floatingActionButton: FloatingActionButton(
             tooltip: 'Add transaction', // used by assistive technologies
-            child: Icon(Icons.add),
-            onPressed: null,
+            child: const Icon(Icons.add),
+            onPressed: () {
+              _addTransactionPage(context);
+            },
           ),
         ));
+  }
+
+  void _addTransactionPage(BuildContext context) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const AddTransactionWidget()));
   }
 }

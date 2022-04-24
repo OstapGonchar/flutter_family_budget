@@ -12,15 +12,15 @@ class NavigationDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeaderWidget(),
+          const DrawerHeaderWidget(),
           ListTile(
-            leading: Icon(Icons.account_balance),
-            title: Text('Accounts'),
+            leading: const Icon(Icons.account_balance),
+            title: const Text('Accounts'),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.savings),
-            title: Text('Budget'),
+            leading: const Icon(Icons.savings),
+            title: const Text('Budget'),
             onTap: () {},
           ),
         ],
@@ -30,6 +30,8 @@ class NavigationDrawer extends StatelessWidget {
 }
 
 class DrawerHeaderWidget extends StatelessWidget {
+  const DrawerHeaderWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return DrawerHeader(
@@ -44,7 +46,7 @@ class DrawerHeaderWidget extends StatelessWidget {
                 child: const Text('AH')),
           ),
           Text('Ostap Gonchar', style: Theme.of(context).textTheme.headline5),
-          Text('ostap.gonchar@gmail.com')
+          const Text('ostap.gonchar@gmail.com')
         ],
       ),
     );
