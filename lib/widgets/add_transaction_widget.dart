@@ -94,7 +94,8 @@ class _AddTransactionState extends State<AddTransactionWidget> {
                     child: TextField(
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'^(\d+)?\.?\d{0,2}'))
                   ],
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
@@ -118,6 +119,28 @@ class _AddTransactionState extends State<AddTransactionWidget> {
             )
           ],
         ),
+      ),
+      bottomSheet: Row(
+        children: [
+          Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                  height: 60,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        //TODO: Add add logic
+                      },
+                      child: const Text('Add')))),
+          Expanded(
+              child: Container(
+                  padding: const EdgeInsets.all(10),
+                  height: 60,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Cancel'))))
+        ],
       ),
     );
   }
