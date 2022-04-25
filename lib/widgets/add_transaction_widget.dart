@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class AddTransactionWidget extends StatefulWidget {
@@ -17,6 +18,7 @@ class _AddTransactionState extends State<AddTransactionWidget> {
   String _accountValue = 'Nordea';
   String _budgetName = 'April 2022';
   DateTime _transactionDate = DateTime.now();
+  String _defaultCurrency = 'DKK';
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +85,35 @@ class _AddTransactionState extends State<AddTransactionWidget> {
                   icon: const Icon(Icons.calendar_today),
                   onPressed: _selectDate,
                 )
+              ],
+            ),
+            Row(
+              children: [
+                label('Sum:'),
+                Expanded(
+                    child: TextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
+                  ],
+                  decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                  ),
+                )),
+                DropdownButton(
+                    value: _defaultCurrency,
+                    items: <String>['DKK', 'USD']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _defaultCurrency = newValue!;
+                      });
+                    })
               ],
             )
           ],
