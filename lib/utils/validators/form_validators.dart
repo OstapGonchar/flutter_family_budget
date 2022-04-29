@@ -9,3 +9,13 @@ FormFieldValidator<String> isEmptyStringValidator({String message = 'Please choo
     }
   };
 }
+
+FormFieldValidator<Object> isNullValidator({String message = 'Please choose the value'}) {
+  return (Object? value) {
+    if (value == null) {
+      return message;
+    } else {
+      return null;
+    }
+  };
+}
