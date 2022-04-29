@@ -1,3 +1,6 @@
+import 'package:family_budget/models/account.dart';
+import 'package:family_budget/models/transaction.dart';
+import 'package:family_budget/services/account_service.dart';
 import 'package:family_budget/utils/validators/form_validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,10 +20,13 @@ class _AddTransactionState extends State<AddTransactionWidget> {
   final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
   final _formKey = GlobalKey<FormState>();
 
-  String _accountValue = 'Nordea';
-  String _budgetName = 'April 2022';
+  Account _account = const Account('Nordea', id: 1);
+  String _budget = 'April 2022';
   DateTime _transactionDate = DateTime.now();
-  String _defaultCurrency = 'DKK';
+  double _amount = 0;
+  String _currency = 'DKK';
+  String _title = '';
+  String _description = '';
 
   @override
   Widget build(BuildContext context) {
@@ -35,37 +41,13 @@ class _AddTransactionState extends State<AddTransactionWidget> {
             accountRow(),
             budgetRow(),
             dateRow(),
-            sumRow(),
+            amountRow(),
             titleRow(),
             descriptionRow()
           ],
         ),
       ),
-      bottomSheet: Row(
-        children: [
-          Expanded(
-              child: Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 60,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          //TODO: Add add logic
-                          debugPrint('Valid, add logic here');
-                        }
-                      },
-                      child: const Text('Add')))),
-          Expanded(
-              child: Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 60,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Cancel'))))
-        ],
-      ),
+      bottomSheet: bottomButtons(context),
     );
   }
 
@@ -81,21 +63,22 @@ class _AddTransactionState extends State<AddTransactionWidget> {
         label('Account:'),
         Expanded(
             child: DropdownButtonFormField(
-          value: _accountValue,
+          value: _account,
           isExpanded: true,
-          items: <String>['Nordea', 'Wallet']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
+          items: AccountService()
+              .getAccounts()
+              .map<DropdownMenuItem<Account>>((Account value) {
+            return DropdownMenuItem<Account>(
               value: value,
-              child: Text(value),
+              child: Text(value.name),
             );
           }).toList(),
-          onChanged: (String? newValue) {
+          onChanged: (Account? newValue) {
             setState(() {
-              _accountValue = newValue!;
+              _account = newValue!;
             });
           },
-          validator: isEmptyStringValidator(),
+          validator: isNullValidator(),
         ))
       ],
     );
@@ -107,7 +90,7 @@ class _AddTransactionState extends State<AddTransactionWidget> {
         label('Budget:'),
         Expanded(
             child: DropdownButtonFormField(
-          value: _budgetName,
+          value: _budget,
           isExpanded: true,
           items: <String>['April 2022']
               .map<DropdownMenuItem<String>>((String value) {
@@ -118,7 +101,7 @@ class _AddTransactionState extends State<AddTransactionWidget> {
           }).toList(),
           onChanged: (String? newValue) {
             setState(() {
-              _budgetName = newValue!;
+              _budget = newValue!;
             });
           },
           validator: isEmptyStringValidator(),
@@ -148,10 +131,10 @@ class _AddTransactionState extends State<AddTransactionWidget> {
     );
   }
 
-  Row sumRow() {
+  Row amountRow() {
     return Row(
       children: [
-        label('Sum:'),
+        label('Amount:'),
         Expanded(
             child: TextFormField(
           keyboardType: TextInputType.number,
@@ -160,11 +143,16 @@ class _AddTransactionState extends State<AddTransactionWidget> {
           ],
           decoration: const InputDecoration(
               border: UnderlineInputBorder(),
-              labelText: 'Enter transaction sum'),
+              labelText: 'Enter transaction amount'),
           validator: isEmptyStringValidator(),
+          onChanged: (String? newValue) {
+            setState(() {
+              _amount = double.parse(newValue!);
+            });
+          },
         )),
         DropdownButton(
-            value: _defaultCurrency,
+            value: _currency,
             items: <String>['DKK', 'USD']
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
@@ -174,7 +162,7 @@ class _AddTransactionState extends State<AddTransactionWidget> {
             }).toList(),
             onChanged: (String? newValue) {
               setState(() {
-                _defaultCurrency = newValue!;
+                _currency = newValue!;
               });
             })
       ],
@@ -191,6 +179,11 @@ class _AddTransactionState extends State<AddTransactionWidget> {
               border: UnderlineInputBorder(),
               labelText: 'Enter transaction title'),
           validator: isEmptyStringValidator(),
+          onChanged: (String value) {
+            setState(() {
+              _title = value;
+            });
+          },
         )),
       ],
     );
@@ -206,6 +199,11 @@ class _AddTransactionState extends State<AddTransactionWidget> {
               border: UnderlineInputBorder(),
               labelText: 'Enter transaction description'),
           validator: isEmptyStringValidator(),
+          onChanged: (String value) {
+            setState(() {
+              _description = value;
+            });
+          },
         )),
       ],
     );
@@ -236,5 +234,36 @@ class _AddTransactionState extends State<AddTransactionWidget> {
           style: const TextStyle(fontWeight: FontWeight.bold),
           textScaleFactor: 1.3,
         ));
+  }
+
+  Row bottomButtons(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                height: 60,
+                child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        //TODO: This result should called via parent callback function
+                        final transaction = Transaction(_title, _amount,
+                            _currency, _transactionDate, _account,
+                            description: _description);
+                        debugPrint(transaction.toString());
+                      }
+                    },
+                    child: const Text('Add')))),
+        Expanded(
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                height: 60,
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'))))
+      ],
+    );
   }
 }
