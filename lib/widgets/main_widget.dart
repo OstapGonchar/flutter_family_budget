@@ -1,11 +1,19 @@
+import 'package:family_budget/services/transaction_service.dart';
 import 'package:family_budget/widgets/add_transaction_widget.dart';
-import 'package:family_budget/widgets/debt_widget.dart';
-import 'package:family_budget/widgets/income_widget.dart';
+import 'package:family_budget/widgets/transactions_list_widget.dart';
 import 'package:family_budget/widgets/nav_drawer.dart';
 import 'package:flutter/material.dart';
 
-class TransactionsWidget extends StatelessWidget {
-  const TransactionsWidget({Key? key}) : super(key: key);
+class MainWidget extends StatefulWidget {
+
+  const MainWidget({Key? key}) : super(key: key);
+
+  @override
+  State<MainWidget> createState() => _MainWidgetState();
+}
+
+class _MainWidgetState extends State<MainWidget> {
+  final TransactionService _transactionService = TransactionService();
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +43,8 @@ class TransactionsWidget extends StatelessWidget {
           // body is the majority of the screen.
           body: TabBarView(
             children: [
-              DebtWidget(),
-              IncomeWidget(),
+              TransactionsListWidget(_transactionService.getDebtTransactions()),
+              TransactionsListWidget(_transactionService.getIncomeTransactions()),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -49,8 +57,11 @@ class TransactionsWidget extends StatelessWidget {
         ));
   }
 
-  void _addTransactionPage(BuildContext context) {
-    Navigator.push(context,
+  _addTransactionPage(BuildContext context) async {
+    final transaction = await Navigator.push(context,
         MaterialPageRoute(builder: (context) => const AddTransactionWidget()));
+    setState(() {
+      _transactionService.addDebtTransaction(transaction);
+    });
   }
 }

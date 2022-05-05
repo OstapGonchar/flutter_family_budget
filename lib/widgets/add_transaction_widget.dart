@@ -1,4 +1,5 @@
 import 'package:family_budget/models/account.dart';
+import 'package:family_budget/models/category.dart';
 import 'package:family_budget/models/transaction.dart';
 import 'package:family_budget/services/account_service.dart';
 import 'package:family_budget/utils/validators/form_validators.dart';
@@ -21,6 +22,7 @@ class _AddTransactionState extends State<AddTransactionWidget> {
   final _formKey = GlobalKey<FormState>();
 
   Account _account = const Account('Nordea', id: 1);
+  String _category = '1. Food';
   String _budget = 'April 2022';
   DateTime _transactionDate = DateTime.now();
   double _amount = 0;
@@ -39,6 +41,7 @@ class _AddTransactionState extends State<AddTransactionWidget> {
         child: ListView(
           children: [
             accountRow(),
+            categoryRow(),
             budgetRow(),
             dateRow(),
             amountRow(),
@@ -79,6 +82,32 @@ class _AddTransactionState extends State<AddTransactionWidget> {
             });
           },
           validator: isNullValidator(),
+        ))
+      ],
+    );
+  }
+
+  Row categoryRow() {
+    return Row(
+      children: [
+        label('Category:'),
+        Expanded(
+            child: DropdownButtonFormField(
+          value: _category,
+          isExpanded: true,
+          items:
+              <String>['1. Food'].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              _category = newValue!;
+            });
+          },
+          validator: isEmptyStringValidator(),
         ))
       ],
     );
@@ -246,11 +275,12 @@ class _AddTransactionState extends State<AddTransactionWidget> {
                 child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        //TODO: This result should called via parent callback function
                         final transaction = Transaction(_title, _amount,
                             _currency, _transactionDate, _account,
-                            description: _description);
-                        debugPrint(transaction.toString());
+                            description: _description,
+                            isSync: false,
+                            category: Category(_category));
+                        Navigator.pop(context, transaction);
                       }
                     },
                     child: const Text('Add')))),

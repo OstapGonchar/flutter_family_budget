@@ -12,10 +12,15 @@ class Transaction {
   final Category? category;
   final Budget? budget;
   final String description;
+  final bool isSync;
 
   const Transaction(
       this.title, this.amount, this.currency, this.dateTime, this.account,
-      {this.id, this.description = '', this.category, this.budget});
+      {this.id,
+      this.description = '',
+      this.category,
+      this.budget,
+      this.isSync = true});
 
   @override
   String toString() {
