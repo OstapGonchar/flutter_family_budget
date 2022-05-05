@@ -17,7 +17,7 @@ class AddTransactionWidget extends StatefulWidget {
 
 class _AddTransactionState extends State<AddTransactionWidget> {
   final _transactionDateTextController = TextEditingController();
-  final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+  final DateFormat _dateFormat = DateFormat("yyyy-MM-dd");
   final _formKey = GlobalKey<FormState>();
 
   Account _account = const Account('Nordea', id: 1);
@@ -220,7 +220,7 @@ class _AddTransactionState extends State<AddTransactionWidget> {
     if (newDate != null) {
       setState(() {
         _transactionDate = newDate;
-        _transactionDateTextController.text = dateFormat.format(newDate);
+        _transactionDateTextController.text = _dateFormat.format(newDate);
       });
     }
   }

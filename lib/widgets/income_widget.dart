@@ -1,22 +1,17 @@
+import 'package:family_budget/services/transaction_service.dart';
+import 'package:family_budget/utils/transactions_list_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:family_budget/widgets/transaction_date_divider.dart';
 
 class IncomeWidget extends StatelessWidget {
-  const IncomeWidget({
+  final _transactionService = TransactionService();
+
+  IncomeWidget({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        buildDivider('30.03.2022'),
-        const ListTile(
-          title: Text('Salary'),
-          subtitle: Text('1. Salary'),
-          trailing: Text('53000.00 DKK'),
-        )
-      ],
-    );
+    return TransactionListBuilder()
+        .buildListView(_transactionService.getIncomeTransactions());
   }
 }

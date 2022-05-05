@@ -1,8 +1,8 @@
 import 'package:family_budget/widgets/add_transaction_widget.dart';
-import 'package:family_budget/widgets/nav_drawer.dart';
-import 'package:flutter/material.dart';
 import 'package:family_budget/widgets/debt_widget.dart';
 import 'package:family_budget/widgets/income_widget.dart';
+import 'package:family_budget/widgets/nav_drawer.dart';
+import 'package:flutter/material.dart';
 
 class TransactionsWidget extends StatelessWidget {
   const TransactionsWidget({Key? key}) : super(key: key);
@@ -33,7 +33,7 @@ class TransactionsWidget extends StatelessWidget {
           ),
           drawer: const NavigationDrawer(),
           // body is the majority of the screen.
-          body: const TabBarView(
+          body: TabBarView(
             children: [
               DebtWidget(),
               IncomeWidget(),
